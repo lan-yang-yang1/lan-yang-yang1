@@ -1,10 +1,121 @@
-- 👋 Hi, I’m @lan-yang-yang1
-- 👀 I’m interested in ...
-- 🌱 I’m currently learning ...
-- 💞️ I’m looking to collaborate on ...
-- 📫 How to reach me ...
+#include <stdio.h>
+#include <stdlib.h>
 
-<!---
-lan-yang-yang1/lan-yang-yang1 is a ✨ special ✨ repository because its `README.md` (this file) appears on your GitHub profile.
-You can click the Preview link to take a look at your changes.
---->
+
+
+typedef struct node
+{
+	int data;
+	struct node* next;
+}NODE, * PNODE;//node i等效于struct node i;*PNODE 等效于struct node *i
+typedef struct stack
+{
+	NODE* top;
+	NODE* bottom;
+}STACK;
+
+
+
+//配合动态栈
+void init(STACK*);
+void push(STACK*,int);//压入的栈，及值
+void print(STACK*);//打印
+void pop(STACK*);//出栈
+void clear(STACK*);//请空栈
+bool full(STACK*);
+int main()
+{
+	STACK s;
+	init(&s);
+	push(&s, 1);
+	push(&s, 2);
+	push(&s, 3);
+	push(&s, 4);
+	push(&s, 5);
+
+
+
+	print(&s);
+	return 0;
+}
+
+
+void init(STACK* p)
+{
+	p->top = (NODE*)malloc(sizeof(NODE));//创建头结点地址赋给p->top
+	p->bottom = p->top;//使p->bottom也指向头结点
+	
+	p->top->next = NULL;
+
+
+
+}
+
+void push(STACK* p,int val)
+{
+	NODE* pnew = (NODE*)malloc(sizeof(NODE));//开辟新结点
+	pnew->data = val;
+	pnew->next = p->top;//将结点下个节点的地址给p->next
+	p->top = pnew;//在将p->top指向新的结点，保证p->top始终指向最上边
+	
+}
+void print(STACK* p)
+{
+	if (full(p) == true)
+	{
+		printf("链表已空");
+	}
+	else {
+		NODE* r = p->top;//创建指针r
+		while (p->bottom != r)//便利是否到最底部
+		{
+			printf("  %d ", r->data);
+			r = r->next;
+
+
+		}
+	}
+
+
+}
+void pop(STACK* p)
+{
+	NODE* r;//定义指针方便释放内存
+	r = NULL;
+	r = p->top;//将指针p地址给到r
+	p->top = r->next;
+	free(r);
+}
+void clear(STACK* p)
+{
+	if (true == full(p))
+	{
+		return ;
+	}
+	else {
+		NODE* r = NULL;//定义用来释放内存的指针
+
+		r = p->top;
+		NODE* q = NULL;//用来记录r->next的值
+		while (p->bottom != r)
+		{
+			q = r->next;
+			free(r);
+			r = q;
+		}
+		p->top = p->bottom;
+	}
+}
+
+bool full(STACK*p)
+{
+
+	if (p->bottom == p->top)
+	{
+		return true;
+	}
+	else
+	{
+		return false;
+	}
+}
